@@ -43,9 +43,15 @@ function tDiagram(dataset) {
     leaf.append('rect')
         // .attr('id', d => (d.leafUID = window.uid('leaf').id))
         .attr('class', 'tile')
-        .attr('fill', 'lightBlue')
+        .attr('fill', 'blue')
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
+
+    d3.select('body')
+        .append('div')
+        .attr('id', 'legend')
+
+    
 
 
 
