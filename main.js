@@ -21,7 +21,7 @@ function tDiagram(dataset) {
 
     const treemap = dataset => d3.treemap()
         .tile(d => d)
-        .size([100, 200])
+        .size([400, 200])
         .padding(1)
         .round(true)
         (d3.hierarchy(dataset)
@@ -29,16 +29,22 @@ function tDiagram(dataset) {
             .sort((a, b) => b.value - a.value))
 
     console.log(treemap)
-
+    
     const root = treemap(dataset);
 
-    const svg = d3.create('svg')
-        .attr('viewBox', [0, 0, 100, 200])
+    const svg = d3.select('body')
+        .append('svg')
+        // .attr('viewBox', [0, 0, 400, 200])
+        .attr('width', 400)
+        .attr('height', 200)
 
-    const leaf = d3.selectAll('g')
+    const leaf = svg.selectAll('g')
         .data(root.leaves())
         .join('g')
-        .attr('transform', d => `transform($(d.x0),$(d.y0)`)
+        // .attr('transform', d => `transform($(d.x0),$(d.y0)`)
+        .attr('transform', d => {
+            console.log(d)
+        })
 
     leaf.append('rect')
         // .attr('id', d => (d.leafUID = window.uid('leaf').id))
@@ -46,10 +52,20 @@ function tDiagram(dataset) {
         .attr('fill', 'blue')
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
+        .on('mouseover', d => {
+            tooltip.style('visibility', 'visible')
+        })
+        .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
-    d3.select('body')
-        .append('div')
-        .attr('id', 'legend')
+    // d3.select('body')
+        svg.append('div')
+            .attr('id', 'legend')
+            .append('rect')
+            .attr('class', 'legend-item')
+
+
+    
+        
 
     
 
