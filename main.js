@@ -77,11 +77,22 @@ function tDiagram(dataset) {
 
         const colors = ['blue', 'green']
 
-    // d3.select('body')
-        svg.append('div')
+        d3.select('body')
+            .append('div')
             .attr('id', 'legend')
+            .selectAll('rect')
+            .data(colors)
+            .enter()
             .append('rect')
+            .attr('width', '1rem')
+            .attr('height', '1rem')
+            .attr('x', 400)
+            .attr('y', 200)
             .attr('class', 'legend-item')
+            .attr('fill', (d) => {
+                console.log(d)
+                return d
+            })
 
 
     
