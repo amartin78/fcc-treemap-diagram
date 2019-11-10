@@ -8,6 +8,15 @@ html, body {
     background-color: azure;
 }
 
+h2 {
+    margin-top: -3rem;
+}
+
+h3 {
+    margin-top: -1rem;
+    margin-bottom: 3rem;
+}
+
 svg {
     background-color: lightsalmon;
 }
