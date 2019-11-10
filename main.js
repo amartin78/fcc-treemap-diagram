@@ -7,8 +7,6 @@ d3.json('https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-
 
 function tDiagram(dataset) {
 
-    // console.log(dataset)
-
     d3.select('body')
         .append('h2')
         .attr('id', 'title')
@@ -21,6 +19,7 @@ function tDiagram(dataset) {
 
     const width = 800
     const height = 400
+    const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     const treemap = dataset => d3.treemap()
         // .tile(d => {console.log(d)})
@@ -31,7 +30,7 @@ function tDiagram(dataset) {
             .sum(d => d.value)
             .sort((a, b) => b.height - a.height || b.value - a.value))
 
-    // console.log(treemap)
+    console.log(color)
 
     const tooltip = d3.select('body')
         .append('div')
@@ -56,14 +55,17 @@ function tDiagram(dataset) {
     leaf.append('rect')
         // .attr('id', d => (d.leafUID = window.uid('leaf').id))
         .attr('class', 'tile')
+        .attr('fill', d => {
+            // console.log(d['data']['name'])
+            while (d.depth > 1) {
+                d = d.parent;
+            }
+            return color(d['data']['name'])
+        })
         .style('position', 'relative')
-        .attr('fill', 'blue')
         .attr('data-name', d => d['data']['name'])
         .attr('data-category', d => d['data']['category'])
-        .attr('data-value', d => {
-            console.log(d)
-            return d['data']['value']
-        })
+        .attr('data-value', d => d['data']['value'])
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .on('mouseover', d => {
@@ -72,6 +74,8 @@ function tDiagram(dataset) {
             tooltip.attr('data-value', d['data']['value'])
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
+
+        const colors = ['blue', 'green']
 
     // d3.select('body')
         svg.append('div')
