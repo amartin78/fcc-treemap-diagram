@@ -8,6 +8,14 @@ html, body {
     background-color: azure;
 }
 
+#links {
+    margin-top: -3rem;
+    margin-bottom: 4rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+}
+
 h2 {
     margin-top: -3rem;
 }

@@ -1,36 +1,80 @@
 
-d3.json('https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json')
-    .then(result => {
-        tDiagram(result);
-    });
+function init(l) {
+
+    if (document.getElementById('svg') !== null) {
+        document.getElementById('svg').remove()
+        document.getElementById('title').remove()
+        document.getElementById('description').remove()
+        document.getElementById('tooltip').remove()
+    }
+
+    let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
+    if (l === 'g') {
+        let title = 'Game Sales'
+        let description = 'Most Sold Games Grouped By Platform'
+        link += 'video-game-sales-data.json';
+        d3.json(link)
+            .then(result => {
+                tDiagram(result, title, description);
+            });
+    } else if (l === 'm') {
+        let title = 'Movie Sales'
+        let description = 'Most Sold Movies Grouped By Category'
+        link += 'movie-data.json';
+        d3.json(link)
+            .then(result => {
+                tDiagram(result, title, description);
+            });
+    } else {
+        let title = 'Data Set'
+        let description = 'Most Sold Data Set'
+        link += 'kickstarter-funding-data.json';
+        d3.json(link)
+            .then(result => {
+                tDiagram(result, title, description);
+            });
+    }
+}
 
 
-function tDiagram(dataset) {
+const links = ['Games', 'Movies', 'Data']
+
+d3.select('body')
+    .append('ul')
+    .attr('id', 'links')
+    .selectAll('li')
+    .data(links)
+    .enter()
+        .append('li')
+        .append('button')
+        .attr('onclick', d => d[0].toLowerCase() === 'g' ? 'init(\'g\')' : d[0].toLowerCase() === 'm' ? 'init(\'m\')' : 'init(\'d\')')
+        .text(d => d)
+
+init('g');
+
+
+function tDiagram(dataset, title, description) {
 
     d3.select('body')
         .append('h2')
         .attr('id', 'title')
-        .text('Movie Sales')
+        .text(title)
 
     d3.select('body')
         .append('h3')
         .attr('id', 'description')
-        .text('Most Sold Movies Grouped By Category')
+        .text(description)
 
     const width = 800
     const height = 400
     const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     const treemap = dataset => d3.treemap()
-        // .tile(d => {console.log(d)})
         .size([width, height])
         .padding(1)
-        // .round(true)
         (d3.hierarchy(dataset)
             .sum(d => d.value)
             .sort((a, b) => b.height - a.height || b.value - a.value))
-
-    console.log(color)
 
     const tooltip = d3.select('body')
         .append('div')
@@ -44,6 +88,7 @@ function tDiagram(dataset) {
 
     const svg = d3.select('body')
         .append('svg')
+        .attr('id', 'svg')
         .attr('width', width)
         .attr('height', height)
 
@@ -53,10 +98,8 @@ function tDiagram(dataset) {
         .attr('transform', d => `translate(${d.x0},${d.y0})`)
 
     leaf.append('rect')
-        // .attr('id', d => (d.leafUID = window.uid('leaf').id))
         .attr('class', 'tile')
         .attr('fill', d => {
-            // console.log(d['data']['name'])
             while (d.depth > 1) {
                 d = d.parent;
             }
@@ -70,7 +113,6 @@ function tDiagram(dataset) {
         .attr('height', d => d.y1 - d.y0)
         .on('mouseover', d => {
             tooltip.style('visibility', 'visible')
-            // console.log(d['value'])
             tooltip.attr('data-value', d['data']['value'])
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
@@ -83,33 +125,19 @@ function tDiagram(dataset) {
             .selectAll('rect')
             .data(colors)
             .enter()
-            .append('rect')
-            .attr('width', '1rem')
-            .attr('height', '1rem')
-            .attr('x', 400)
-            .attr('y', 200)
-            .attr('class', 'legend-item')
-            .attr('fill', (d) => {
-                console.log(d)
-                return d
-            })
+                .append('rect')
+                .attr('width', '1rem')
+                .attr('height', '1rem')
+                .attr('x', 400)
+                .attr('y', 200)
+                .attr('class', 'legend-item')
+                .attr('fill', d => d)
 
-
-    
-        
-
-    
-
-
-
-
-    
-
-
-
-
-
-    
 
 }
+
+
+
+
+
 
