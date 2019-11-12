@@ -1,42 +1,4 @@
 
-function init(l) {
-
-    if (document.getElementById('svg') !== null) {
-        document.getElementById('svg').remove()
-        document.getElementById('title').remove()
-        document.getElementById('description').remove()
-        document.getElementById('tooltip').remove()
-    }
-
-    let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
-    if (l === 'g') {
-        let title = 'Game Sales'
-        let description = 'Most Sold Games Grouped By Platform'
-        link += 'video-game-sales-data.json';
-        d3.json(link)
-            .then(result => {
-                tDiagram(result, title, description);
-            });
-    } else if (l === 'm') {
-        let title = 'Movie Sales'
-        let description = 'Most Sold Movies Grouped By Category'
-        link += 'movie-data.json';
-        d3.json(link)
-            .then(result => {
-                tDiagram(result, title, description);
-            });
-    } else {
-        let title = 'Data Set'
-        let description = 'Most Sold Data Set'
-        link += 'kickstarter-funding-data.json';
-        d3.json(link)
-            .then(result => {
-                tDiagram(result, title, description);
-            });
-    }
-}
-
-
 const links = ['Games', 'Movies', 'Data']
 
 d3.select('body')
@@ -52,6 +14,40 @@ d3.select('body')
 
 init('g');
 
+function init(l) {
+
+    if (document.getElementById('svg') !== null) {
+        document.getElementById('svg').remove()
+        document.getElementById('title').remove()
+        document.getElementById('description').remove()
+        document.getElementById('tooltip').remove()
+    }
+
+    let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
+    if (l === 'g') {
+        let title = 'Game Sales'
+        let description = 'Most Sold Games Grouped By Platform'
+        link += 'video-game-sales-data.json';
+        getData(link, title, description)
+    } else if (l === 'm') {
+        let title = 'Movie Sales'
+        let description = 'Most Sold Movies Grouped By Category'
+        link += 'movie-data.json';
+        getData(link, title, description)
+    } else {
+        let title = 'Data Set'
+        let description = 'Most Sold Data Set'
+        link += 'kickstarter-funding-data.json';
+        getData(link, title, description)
+    }
+}
+
+function getData(l, t, d) {
+    d3.json(l)
+    .then(result => {
+        tDiagram(result, t, d);
+    });
+}
 
 function tDiagram(dataset, title, description) {
 
@@ -114,6 +110,11 @@ function tDiagram(dataset, title, description) {
         .on('mouseover', d => {
             tooltip.style('visibility', 'visible')
             tooltip.attr('data-value', d['data']['value'])
+            tooltip.html(`Name: ${d['data']['name']} <br> 
+                          Category: ${d['data']['category']} <br>
+                          Value: ${d['data']['value']}`)
+                   .style('top', 200)
+                   .style('left', 400)
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
@@ -125,7 +126,7 @@ function tDiagram(dataset, title, description) {
             .selectAll('rect')
             .data(colors)
             .enter()
-                .append('rect')
+            .append('rect')
                 .attr('width', '1rem')
                 .attr('height', '1rem')
                 .attr('x', 400)

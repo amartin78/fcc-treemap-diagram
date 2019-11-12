@@ -29,3 +29,11 @@ svg {
     background-color: white;
 }
 
+#tooltip {
+    text-align: center;
+    background-color: azure;
+    padding: 1rem;
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
