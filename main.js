@@ -61,8 +61,8 @@ function tDiagram(dataset, title, description) {
         .attr('id', 'description')
         .text(description)
 
-    const width = 800
-    const height = 400
+    const width = 1000
+    const height = 520
     const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     const treemap = dataset => d3.treemap()
@@ -118,6 +118,16 @@ function tDiagram(dataset, title, description) {
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
+        leaf.append('text')
+            .selectAll('tspan')
+            .data(d => d['data']['name'].split(/(?=[A-Z][^A-Z])/g))
+            .join('tspan')
+            .attr('x', 4)
+            .attr('y', (d, i, nodes) => `${0.5 + (i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
+            .style('font-size', '0.52rem')
+            .style('font-family', 'verdana')
+            .text(d => d)
+
         const colors = ['blue', 'green']
 
         d3.select('body')
@@ -133,6 +143,14 @@ function tDiagram(dataset, title, description) {
                 .attr('y', 200)
                 .attr('class', 'legend-item')
                 .attr('fill', d => d)
+        
+        // d3.select('body')
+        //     .append('div')
+        //     .attr('width', '2rem')
+        //     .attr('height', '10rem')
+        //     .style('background-color', 'green')
+        //     .attr('x', 300)
+        //     .attr('y', 800)
 
 
 }
