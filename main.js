@@ -17,10 +17,10 @@ init('g');
 function init(l) {
 
     if (document.getElementById('svg') !== null) {
-        document.getElementById('svg').remove()
-        document.getElementById('title').remove()
-        document.getElementById('description').remove()
-        document.getElementById('tooltip').remove()
+        let elems = ['svg', 'title', 'description', 'tooltip']
+        elems.forEach(function(e) {
+            document.getElementById(e).remove()
+        })
     }
 
     let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
@@ -64,7 +64,6 @@ function tDiagram(dataset, title, description) {
     const width = 1050
     const height = 600
     const padding = 200
-    const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     const treemap = dataset => d3.treemap()
         .size([width - padding, height - padding])
@@ -84,6 +83,9 @@ function tDiagram(dataset, title, description) {
     const root = treemap(dataset);
 
     const { DOM } = new observablehq.Library
+
+    let color = d3.scaleOrdinal().domain(root['children'])
+                .range(["rgb(69,63,188)", "rgb(88,181,225)", "rgb(179,228,103)", "rgb(73,139,163)", "rgb(176,164,216)", "rgb(226,109,248)", "rgb(99,161,34)", "rgb(207,75,34)", "rgb(124,219,116)", "rgb(202,98,133)", "rgb(231,173,121)", "rgb(33,122,41)", "rgb(250,33,127)", "rgb(244,212,3)", "rgb(123,39,80)", "rgb(86,47,255)", "rgb(161,19,178)", "rgb(168,104,40)", "rgb(114,229,239)", "rgb(45,89,90)", "rgb(17,160,170)", "rgb(154,232,113)", "rgb(35,137,16)", "rgb(177,191,129)", "rgb(106,127,47)", "rgb(0,214,24)", "rgb(51,74,171)", "rgb(184,138,230)", "rgb(105,27,158)", "rgb(177,200,235)", "rgb(104,55,79)", "rgb(167,45,112)", "rgb(207,96,243)", "rgb(251,9,152)", "rgb(254,22,244)", "rgb(63,22,249)"])
 
     const svg = d3.select('body')
         .append('svg')
@@ -123,7 +125,7 @@ function tDiagram(dataset, title, description) {
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
     leaf.append('clipPath')
-        .attr('id', d => (d.clipUid = DOM.uid('leaf')).id)
+        .attr('id', d => (d.clipUid = DOM.uid('clip')).id)
         .append('use')
         .attr('xlink:href', d => d.leafUid.href)
 
@@ -138,22 +140,49 @@ function tDiagram(dataset, title, description) {
             .style('font-family', 'verdana')
             .text(d => d)
 
-    const colors = ['blue', 'green']
+    let legend = svg.append('g')
+                    .attr('id', 'legend')
 
-    // d3.select('body')
-    svg.append('g')
-            .attr('id', 'legend')
-        .selectAll('rect')
-        .data(['blue', 'orange'])
-        .enter()
-        .append('rect')
-            .attr('class', 'legend-item')
-            .attr('x', 400)
-            .attr('y', (d, i) => {return i * 20})
-            .attr('width', '1rem')
-            .attr('height', '1rem')
-            // .attr('y', 10)
-            .attr('fill', d => d)
+    legend.selectAll('rect')
+            .data(root['children'])
+            .enter()
+            .append('rect')
+                .attr('class', 'legend-item')
+                .attr('x', (d, i) => {return 200 + i * 20})
+                // .attr('y', (d, i) => {return 420 + i * 20})
+                .attr('y', 420)
+                .attr('width', '1rem')
+                .attr('height', '1rem')
+                .attr('fill', (d, i) => {
+                    return color(d['data']['name'])
+                })
+
+    legend.selectAll('text')
+            .data(root['children'].slice(0, 6))
+            .enter()
+            .append('text')
+                .attr('x', (d, i) => { return 200 })
+                .attr('y', (d, i) => { return 460 + i * 20 })
+                .text(d => d['data']['name'])
+
+    legend.selectAll('text')
+            .data(root['children'].slice(6, 12))
+            .enter()
+            .append('text')
+                .attr('x', (d, i) => { 
+                    console.log(i)
+                    return 300 
+                })
+                .attr('y', (d, i) => { return 460 + i * 20 })
+                .text(d => d['data']['name'])
+
+    let t = root['children']
+
+    // console.log(t.slice(0,6))
+    // console.log(t.slice(6,12))
+            
+
+
 
 
 
