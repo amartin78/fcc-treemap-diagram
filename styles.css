@@ -5,32 +5,36 @@ html, body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: azure;
+    background-color: lavender;
+    /* kaki, lavender */
+    /* 78afbc */
     overflow-y: auto;
     flex: 1 1 auto;
 }
 
 #links {
     margin-top: 6rem;
-    margin-bottom: 4rem;
+    /* margin-bottom: 4rem; */
     padding: 0;
     list-style: none;
     display: flex;
 }
 
 h2 {
-    margin-top: -3rem;
+    /* margin-top: -3rem; */
 }
 
 h3 {
     margin-top: -1rem;
-    margin-bottom: 3rem;
+    margin-bottom: -1rem;
 }
 
 svg {
-    background-color: white;
+    /* background-color: white; */
+    margin-top: 3rem;
+    padding: 0.2rem;
     overflow-y: auto;
-    flex: 0 0 auto;
+    flex: 1 0 auto;
 }
 
 #tooltip {

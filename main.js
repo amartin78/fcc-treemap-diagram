@@ -61,12 +61,13 @@ function tDiagram(dataset, title, description) {
         .attr('id', 'description')
         .text(description)
 
-    const width = 1000
-    const height = 520
+    const width = 1050
+    const height = 600
+    const padding = 200
     const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     const treemap = dataset => d3.treemap()
-        .size([width, height])
+        .size([width - padding, height - padding])
         .padding(1)
         (d3.hierarchy(dataset)
             .sum(d => d.value)
@@ -82,10 +83,12 @@ function tDiagram(dataset, title, description) {
     
     const root = treemap(dataset);
 
+    const { DOM } = new observablehq.Library
+
     const svg = d3.select('body')
         .append('svg')
         .attr('id', 'svg')
-        .attr('width', width)
+        .attr('width', width - padding)
         .attr('height', height)
 
     const leaf = svg.selectAll('g')
@@ -94,6 +97,7 @@ function tDiagram(dataset, title, description) {
         .attr('transform', d => `translate(${d.x0},${d.y0})`)
 
     leaf.append('rect')
+        .attr('id', d => (d.leafUid = DOM.uid('leaf')).id)
         .attr('class', 'tile')
         .attr('fill', d => {
             while (d.depth > 1) {
@@ -118,39 +122,39 @@ function tDiagram(dataset, title, description) {
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
-        leaf.append('text')
-            .selectAll('tspan')
-            .data(d => d['data']['name'].split(/(?=[A-Z][^A-Z])/g))
-            .join('tspan')
-            .attr('x', 4)
+    leaf.append('clipPath')
+        .attr('id', d => (d.clipUid = DOM.uid('leaf')).id)
+        .append('use')
+        .attr('xlink:href', d => d.leafUid.href)
+
+    leaf.append('text')
+            .attr('clip-path', d => d.clipUid)
+        .selectAll('tspan')
+        .data(d => d['data']['name'].split(/(?=[A-Z][^A-Z])/g))
+        .join('tspan')
+            .attr('x', 3.5)
             .attr('y', (d, i, nodes) => `${0.5 + (i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-            .style('font-size', '0.52rem')
+            .style('font-size', '0.6rem')
             .style('font-family', 'verdana')
             .text(d => d)
 
-        const colors = ['blue', 'green']
+    const colors = ['blue', 'green']
 
-        d3.select('body')
-            .append('div')
+    // d3.select('body')
+    svg.append('g')
             .attr('id', 'legend')
-            .selectAll('rect')
-            .data(colors)
-            .enter()
-            .append('rect')
-                .attr('width', '1rem')
-                .attr('height', '1rem')
-                .attr('x', 400)
-                .attr('y', 200)
-                .attr('class', 'legend-item')
-                .attr('fill', d => d)
-        
-        // d3.select('body')
-        //     .append('div')
-        //     .attr('width', '2rem')
-        //     .attr('height', '10rem')
-        //     .style('background-color', 'green')
-        //     .attr('x', 300)
-        //     .attr('y', 800)
+        .selectAll('rect')
+        .data(['blue', 'orange'])
+        .enter()
+        .append('rect')
+            .attr('class', 'legend-item')
+            .attr('x', 400)
+            .attr('y', (d, i) => {return i * 20})
+            .attr('width', '1rem')
+            .attr('height', '1rem')
+            // .attr('y', 10)
+            .attr('fill', d => d)
+
 
 
 }
