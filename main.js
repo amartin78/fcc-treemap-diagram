@@ -2,6 +2,12 @@
 const links = ['Games', 'Movies', 'Data']
 
 d3.select('body')
+    .append('div')
+        .attr('id', 'header')
+    .append('div')
+        .attr('id', 'container')
+
+d3.select('#header')
     .append('ul')
     .attr('id', 'links')
     .selectAll('li')
@@ -9,10 +15,13 @@ d3.select('body')
     .enter()
         .append('li')
         .append('button')
-        .attr('onclick', d => d[0].toLowerCase() === 'g' ? 'init(\'g\')' : d[0].toLowerCase() === 'm' ? 'init(\'m\')' : 'init(\'d\')')
-        .text(d => d)
+        .attr('class', 'button')
+        .attr('onclick', d => {
+            return d[0].toLowerCase() === 'g' ? 'init(\'g\')' : d[0].toLowerCase() === 'm' ? 'init(\'m\')' : 'init(\'d\')'}
+        ).text(d => d)
 
 init('g');
+
 
 function init(l) {
 
@@ -22,24 +31,33 @@ function init(l) {
             document.getElementById(e).remove()
         })
     }
-
     let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
     if (l === 'g') {
+        active(0)
         let title = 'Game Sales'
         let description = 'Most Sold Games Grouped By Platform'
         link += 'video-game-sales-data.json';
         getData(link, title, description)
     } else if (l === 'm') {
+        active(1)
         let title = 'Movie Sales'
         let description = 'Most Sold Movies Grouped By Category'
         link += 'movie-data.json';
         getData(link, title, description)
     } else {
+        active(2)
         let title = 'Data Set'
         let description = 'Most Sold Data Set'
         link += 'kickstarter-funding-data.json';
         getData(link, title, description)
     }
+}
+
+function active(i) {
+    for(let i=0; i<3; i++){
+        document.getElementsByClassName('button')[i].setAttribute('style', 'color:#333')
+    }
+    return document.getElementsByClassName('button')[i].setAttribute('style', 'color:rgb(202,98,133)')
 }
 
 function getData(l, t, d) {
@@ -49,24 +67,24 @@ function getData(l, t, d) {
     });
 }
 
-function tDiagram(dataset, title, description) {
+function tDiagram(dataset, title, description, active) {
 
-    d3.select('body')
+    d3.select('#container')
         .append('h2')
         .attr('id', 'title')
         .text(title)
 
-    d3.select('body')
+    d3.select('#container')
         .append('h3')
         .attr('id', 'description')
         .text(description)
 
-    const width = 1050
-    const height = 600
+    const width = 1000
+    const height = 650
     const padding = 200
 
     const treemap = dataset => d3.treemap()
-        .size([width - padding, height - padding])
+        .size([width, height - padding])
         .padding(1)
         (d3.hierarchy(dataset)
             .sum(d => d.value)
@@ -90,7 +108,7 @@ function tDiagram(dataset, title, description) {
     const svg = d3.select('body')
         .append('svg')
         .attr('id', 'svg')
-        .attr('width', width - padding)
+        .attr('width', width)
         .attr('height', height)
 
     const leaf = svg.selectAll('g')
@@ -148,9 +166,32 @@ function tDiagram(dataset, title, description) {
             .enter()
             .append('rect')
                 .attr('class', 'legend-item')
-                .attr('x', (d, i) => {return 200 + i * 20})
-                // .attr('y', (d, i) => {return 420 + i * 20})
-                .attr('y', 420)
+                .attr('x', (d, i) => { 
+                    if (i < 4) {
+                        return 150
+                    } else if (i < 8) {
+                        return 310
+                    } else if (i < 12) {
+                        return 470
+                    } else if (i < 16) {
+                        return 630
+                    } else {
+                        return 790
+                    }
+                })
+                .attr('y', (d, i) => { 
+                    if (i < 4) {
+                        return 485 + i * 24 
+                    } else if (i < 8) {
+                        return 485 + (i - 4) * 24 
+                    } else if (i < 12) {
+                        return 485 + (i - 8) * 24 
+                    } else if (i < 16) {
+                        return 485 + (i - 12) * 24 
+                    } else {
+                        return 485 + (i - 16) * 24 
+                    }
+                })
                 .attr('width', '1rem')
                 .attr('height', '1rem')
                 .attr('fill', (d, i) => {
@@ -158,35 +199,40 @@ function tDiagram(dataset, title, description) {
                 })
 
     legend.selectAll('text')
-            .data(root['children'].slice(0, 6))
-            .enter()
-            .append('text')
-                .attr('x', (d, i) => { return 200 })
-                .attr('y', (d, i) => { return 460 + i * 20 })
-                .text(d => d['data']['name'])
-
-    legend.selectAll('text')
-            .data(root['children'].slice(6, 12))
+                .attr('font-size', '0.8rem')
+            .data(root['children'])
             .enter()
             .append('text')
                 .attr('x', (d, i) => { 
-                    console.log(i)
-                    return 300 
+                    if (i < 4) {
+                        return 170
+                    } else if (i < 8) {
+                        return 330
+                    } else if (i < 12) {
+                        return 490
+                    } else if (i < 16) {
+                        return 650
+                    } else {
+                        return 810
+                    }
                 })
-                .attr('y', (d, i) => { return 460 + i * 20 })
+                .attr('y', (d, i) => { 
+                    if (i < 4) {
+                        return 498 + i * 24 
+                    } else if (i < 8) {
+                        return 498 + (i - 4) * 24 
+                    } else if (i < 12) {
+                        return 498 + (i - 8) * 24 
+                    } else if (i < 16) {
+                        return 498 + (i - 12) * 24 
+                    } else {
+                        return 498 + (i - 16) * 24 
+                    }
+                })
                 .text(d => d['data']['name'])
 
-    let t = root['children']
-
-    // console.log(t.slice(0,6))
-    // console.log(t.slice(6,12))
-            
-
-
-
-
-
 }
+
 
 
 

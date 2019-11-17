@@ -5,32 +5,43 @@ html, body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: lavender;
-    /* kaki, lavender */
-    /* 78afbc */
+    background-color: azure;
     overflow-y: auto;
     flex: 1 1 auto;
 }
 
 #links {
-    margin-top: 6rem;
-    /* margin-bottom: 4rem; */
     padding: 0;
     list-style: none;
     display: flex;
+    align-items: flex-start;
 }
 
-h2 {
-    /* margin-top: -3rem; */
+#header {
+    display: flex;
+    width: 1000px;
+    justify-content: space-between;
+    margin-top: 10rem;
+    margin-bottom: -2rem;
 }
 
 h3 {
     margin-top: -1rem;
-    margin-bottom: -1rem;
+}
+
+.button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: '#333'
+}
+
+.button:focus {
+    outline: none;
 }
 
 svg {
-    /* background-color: white; */
     margin-top: 3rem;
     padding: 0.2rem;
     overflow-y: auto;
@@ -45,4 +56,8 @@ svg {
     opacity: 0.85;
     font-size: 0.85rem;
 }
+
+
+
+
 
