@@ -21,8 +21,7 @@ html, body {
     display: flex;
     width: 1000px;
     justify-content: space-between;
-    margin-top: 10rem;
-    margin-bottom: -2rem;
+    margin-top: 1rem;
 }
 
 h3 {
@@ -42,7 +41,6 @@ h3 {
 }
 
 svg {
-    margin-top: 3rem;
     padding: 0.2rem;
     overflow-y: auto;
     flex: 1 0 auto;
@@ -56,6 +54,8 @@ svg {
     opacity: 0.85;
     font-size: 0.85rem;
 }
+
+
 
 
 

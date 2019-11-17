@@ -17,13 +17,13 @@ d3.select('#header')
         .append('button')
         .attr('class', 'button')
         .attr('onclick', d => {
-            return d[0].toLowerCase() === 'g' ? 'init(\'g\')' : d[0].toLowerCase() === 'm' ? 'init(\'m\')' : 'init(\'d\')'}
+            return d[0].toLowerCase() === 'g' ? 'initialize(\'g\')' : d[0].toLowerCase() === 'm' ? 'initialize(\'m\')' : 'initialize(\'d\')'}
         ).text(d => d)
 
-init('g');
+        initialize('g');
 
 
-function init(l) {
+function initialize(l) {
 
     if (document.getElementById('svg') !== null) {
         let elems = ['svg', 'title', 'description', 'tooltip']
@@ -67,7 +67,7 @@ function getData(l, t, d) {
     });
 }
 
-function tDiagram(dataset, title, description, active) {
+function tDiagram(dataset, title, description) {
 
     d3.select('#container')
         .append('h2')
@@ -80,12 +80,14 @@ function tDiagram(dataset, title, description, active) {
         .text(description)
 
     const width = 1000
-    const height = 650
-    const padding = 200
+    const height = 540
+    const padding = 100
+    const format = title[0] === 'G' ? d3.format('.2f') : d3.format('.2s')
 
     const treemap = dataset => d3.treemap()
         .size([width, height - padding])
-        .padding(1)
+        .paddingInner(0.7)
+        .paddingOuter(0.1)
         (d3.hierarchy(dataset)
             .sum(d => d.value)
             .sort((a, b) => b.height - a.height || b.value - a.value))
@@ -132,11 +134,13 @@ function tDiagram(dataset, title, description, active) {
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .on('mouseover', d => {
+            let amount = title[0] === 'G' ? format(d['data']['value']) + ' copies'
+                                          : '$' + format(d['data']['value'])
             tooltip.style('visibility', 'visible')
             tooltip.attr('data-value', d['data']['value'])
             tooltip.html(`Name: ${d['data']['name']} <br> 
                           Category: ${d['data']['category']} <br>
-                          Value: ${d['data']['value']}`)
+                          Value: ${amount}`)
                    .style('top', d3.event['screenY'] - 120)
                    .style('left', d3.event['screenX'] + 20)
         })
@@ -181,15 +185,15 @@ function tDiagram(dataset, title, description, active) {
                 })
                 .attr('y', (d, i) => { 
                     if (i < 4) {
-                        return 485 + i * 24 
+                        return 460 + i * 24 
                     } else if (i < 8) {
-                        return 485 + (i - 4) * 24 
+                        return 460 + (i - 4) * 24 
                     } else if (i < 12) {
-                        return 485 + (i - 8) * 24 
+                        return 460 + (i - 8) * 24 
                     } else if (i < 16) {
-                        return 485 + (i - 12) * 24 
+                        return 460 + (i - 12) * 24 
                     } else {
-                        return 485 + (i - 16) * 24 
+                        return 460 + (i - 16) * 24 
                     }
                 })
                 .attr('width', '1rem')
@@ -218,15 +222,15 @@ function tDiagram(dataset, title, description, active) {
                 })
                 .attr('y', (d, i) => { 
                     if (i < 4) {
-                        return 498 + i * 24 
+                        return 473 + i * 24 
                     } else if (i < 8) {
-                        return 498 + (i - 4) * 24 
+                        return 473 + (i - 4) * 24 
                     } else if (i < 12) {
-                        return 498 + (i - 8) * 24 
+                        return 473 + (i - 8) * 24 
                     } else if (i < 16) {
-                        return 498 + (i - 12) * 24 
+                        return 473 + (i - 12) * 24 
                     } else {
-                        return 498 + (i - 16) * 24 
+                        return 473 + (i - 16) * 24 
                     }
                 })
                 .text(d => d['data']['name'])
