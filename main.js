@@ -1,5 +1,5 @@
 
-const links = ['Games', 'Movies', 'Data']
+const links = ['Games', 'Movies', 'Kickstarter']
 
 d3.select('body')
     .append('div')
@@ -34,8 +34,8 @@ function initialize(l) {
     let link = 'https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/';
     if (l === 'g') {
         active(0)
-        let title = 'Game Sales'
-        let description = 'Most Sold Games Grouped By Platform'
+        let title = 'Video Game Sales'
+        let description = 'Most Sold Video Games Grouped By Platform'
         link += 'video-game-sales-data.json';
         getData(link, title, description)
     } else if (l === 'm') {
@@ -46,8 +46,8 @@ function initialize(l) {
         getData(link, title, description)
     } else {
         active(2)
-        let title = 'Data Set'
-        let description = 'Most Sold Data Set'
+        let title = 'Kickstarter Pledges'
+        let description = 'Kickstarter Pledges Grouped by Category'
         link += 'kickstarter-funding-data.json';
         getData(link, title, description)
     }
