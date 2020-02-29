@@ -141,8 +141,8 @@ function tDiagram(dataset, title, description) {
             tooltip.html(`Name: ${d['data']['name']} <br> 
                           Category: ${d['data']['category']} <br>
                           Value: ${amount}`)
-                   .style('top', d3.event['screenY'] - 120)
-                   .style('left', d3.event['screenX'] + 20)
+                   .style('top', (d3.event['screenY'] - 120) + 'px')
+                   .style('left', (d3.event['screenX'] + 20) + 'px')
         })
         .on('mouseout', d => tooltip.style('visibility', 'hidden'))
 
