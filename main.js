@@ -134,12 +134,13 @@ function tDiagram(dataset, title, description) {
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
         .on('mouseover', d => {
-            let amount = title[0] === 'G' ? format(d['data']['value']) + ' copies'
+            let amount = title[0] === 'V' ? format(d['data']['value']) + 'M copies'
                                           : '$' + format(d['data']['value'])
+            let dividedBy = title[0] === 'V' ? 'Platform' : 'Category'
             tooltip.style('visibility', 'visible')
             tooltip.attr('data-value', d['data']['value'])
             tooltip.html(`Name: ${d['data']['name']} <br> 
-                          Category: ${d['data']['category']} <br>
+                          ${dividedBy}: ${d['data']['category']} <br>
                           Value: ${amount}`)
                    .style('top', (d3.event['screenY'] - 120) + 'px')
                    .style('left', (d3.event['screenX'] + 20) + 'px')
